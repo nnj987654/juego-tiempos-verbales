@@ -1,45 +1,144 @@
-<!doctype html>
-<html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#172554">
-  <title>Reto Verbal · Tiempos verbales</title>
-  <style>
-    :root{--ink:#172554;--muted:#64748b;--paper:#f8fafc;--card:#fff;--primary:#4f46e5;--primary2:#7c3aed;--ok:#059669;--bad:#e11d48;--line:#dbe4f0;--shadow:0 18px 45px #17255418}
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif;color:var(--ink);background:radial-gradient(circle at top left,#dbeafe 0,transparent 34rem),linear-gradient(135deg,#f8fafc,#eef2ff)}
-    .wrap{width:min(1100px,calc(100% - 32px));margin:auto}.top{display:flex;justify-content:space-between;align-items:center;padding:24px 0 12px}.brand{display:flex;gap:12px;align-items:center}.logo{display:grid;place-items:center;width:48px;height:48px;border-radius:15px;color:white;font-size:25px;background:linear-gradient(135deg,var(--primary),var(--primary2));box-shadow:0 8px 20px #4f46e155}.brand h1{font-size:clamp(1.25rem,3vw,1.75rem);margin:0}.brand p{margin:3px 0;color:var(--muted);font-size:.9rem}.stats{display:flex;gap:10px}.stat{background:#ffffffb8;border:1px solid #fff;padding:9px 14px;border-radius:13px;text-align:center;min-width:72px}.stat b{display:block;font-size:1.2rem}.stat small{color:var(--muted)}
-    main{display:grid;grid-template-columns:250px 1fr;gap:22px;padding:22px 0 40px}.panel,.game{background:#fffffff2;border:1px solid #fff;border-radius:25px;box-shadow:var(--shadow)}.panel{padding:21px;height:max-content}.panel h2{font-size:1rem;margin:0 0 13px}.panel label{display:flex;gap:9px;align-items:center;margin:11px 0;font-size:.92rem;color:#334155}.panel input{accent-color:var(--primary)}.button{border:0;cursor:pointer;border-radius:12px;padding:11px 15px;font-weight:700;color:var(--ink);background:#e0e7ff;transition:.2s}.button:hover{transform:translateY(-1px);filter:brightness(.98)}.button.primary{color:white;background:linear-gradient(135deg,var(--primary),var(--primary2));box-shadow:0 7px 15px #4f46e133}.button.ghost{background:transparent;border:1px solid var(--line);width:100%;margin-top:12px}.hint{font-size:.78rem;color:var(--muted);line-height:1.45;margin:18px 0 0}.game{padding:clamp(20px,5vw,43px);position:relative;overflow:hidden}.game:before{content:"";position:absolute;right:-80px;top:-100px;width:230px;height:230px;border-radius:50%;background:#ede9fe;z-index:0}.game>*{position:relative;z-index:1}.progress{height:9px;background:#e2e8f0;border-radius:10px;overflow:hidden;margin-bottom:25px}.progress i{display:block;height:100%;width:0;background:linear-gradient(90deg,#06b6d4,var(--primary));border-radius:10px;transition:width .4s}.question-head{display:flex;justify-content:space-between;gap:10px;align-items:center}.tag{display:inline-block;background:#ede9fe;color:#5b21b6;border-radius:99px;padding:6px 11px;font-size:.78rem;font-weight:800}.question-count{color:var(--muted);font-size:.9rem}.prompt{text-align:center;margin:28px 0 25px}.prompt .person{color:var(--muted);font-size:1.05rem;margin-bottom:7px}.prompt .verb{font-size:clamp(2.4rem,8vw,5.3rem);line-height:1.1;letter-spacing:-.06em;margin:0;background:linear-gradient(135deg,var(--primary),#db2777);color:transparent;background-clip:text;-webkit-background-clip:text}.prompt .meaning{margin:10px 0 0;color:var(--muted);font-size:.9rem}.options{display:grid;grid-template-columns:repeat(2,1fr);gap:12px}.option{min-height:62px;border:2px solid var(--line);border-radius:15px;background:#fff;color:var(--ink);cursor:pointer;font-size:.94rem;font-weight:700;padding:12px;text-align:left;transition:.2s}.option:hover:not(:disabled){border-color:#818cf8;background:#eef2ff;transform:translateY(-2px)}.option.correct{border-color:#10b981;background:#d1fae5;color:#065f46}.option.incorrect{border-color:#fb7185;background:#ffe4e6;color:#9f1239}.option:disabled{cursor:default}.feedback{min-height:53px;margin-top:16px;border-radius:14px;padding:13px 16px;line-height:1.35;display:none}.feedback.show{display:block}.feedback.ok{background:#ecfdf5;color:#065f46}.feedback.bad{background:#fff1f2;color:#9f1239}.next-row{display:flex;justify-content:flex-end;margin-top:17px}.result{text-align:center;padding:22px 0}.result .trophy{font-size:4rem}.result h2{font-size:2rem;margin:9px 0}.result p{color:var(--muted)}.result .big-score{font-size:3.5rem;font-weight:900;color:var(--primary)}.result-actions{display:flex;justify-content:center;gap:10px;margin-top:20px}.hidden{display:none!important}footer{text-align:center;color:var(--muted);font-size:.8rem;padding-bottom:22px}
-    @media(max-width:760px){.top{align-items:flex-start;gap:10px}.stats{gap:5px}.stat{padding:7px 8px;min-width:58px}.stat small{font-size:.67rem}.brand p{display:none}main{grid-template-columns:1fr;padding-top:12px}.panel{order:2}.game{order:1}.panel .checks{display:grid;grid-template-columns:repeat(2,1fr)}.options{grid-template-columns:1fr}.prompt{margin:24px 0 20px}}
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <header class="top"><div class="brand"><div class="logo">Aa</div><div><h1>Reto Verbal</h1><p>Descubre el tiempo de cada verbo</p></div></div><div class="stats"><div class="stat"><b id="score">0</b><small>Puntos</small></div><div class="stat"><b id="streak">0</b><small>Racha</small></div></div></header>
-    <main>
-      <aside class="panel"><h2>Elige las categorías</h2><div class="checks" id="filters"><label><input type="checkbox" value="Indicativo" checked> Indicativo</label><label><input type="checkbox" value="Subjuntivo" checked> Subjuntivo</label><label><input type="checkbox" value="Imperativo" checked> Imperativo</label></div><button class="button ghost" id="reset">Reiniciar partida</button><p class="hint">Hay verbos en <b>-ar, -er e -ir</b>, regulares e irregulares, además de formas reflexivas, pronominales y defectivas.</p></aside>
-      <section class="game" aria-live="polite"><div id="quiz"><div class="progress"><i id="progress"></i></div><div class="question-head"><span class="tag" id="mood">Indicativo</span><span class="question-count" id="counter">1 / 20</span></div><div class="prompt"><div class="person" id="person">yo</div><h2 class="verb" id="verb">canto</h2><p class="meaning" id="meaning">verbo cantar · regular · 1.ª conjugación</p></div><div class="options" id="options"></div><div class="feedback" id="feedback"></div><div class="next-row"><button class="button primary hidden" id="next">Siguiente →</button></div></div><div id="result" class="result hidden"><div class="trophy">🏆</div><h2>¡Partida terminada!</h2><div class="big-score" id="finalScore">0</div><p id="finalText"></p><div class="result-actions"><button class="button primary" id="again">Jugar otra vez</button></div></div></section>
-    </main><footer>Funciona sin conexión · Hecho para aprender español</footer>
-  </div>
+<!DOCTYPE html><html lang="es"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover"><title>Verbario · Practica los tiempos verbales</title>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@500;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#eef2f7;--fg:#14213d;--card:#fff;--mut:#5b6478;--ac:#0b6e99;--acf:#fff;--hl:#f2b134;--ok:#146c2e;--okb:#d8f3e0;--ko:#a4161a;--kob:#fde1e1;--bd:#cfd7e3;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#101a2c;--fg:#e8edf6;--card:#1a2740;--mut:#9aa7bf;--ac:#5cc0ea;--acf:#06202e;--hl:#f2b134;--ok:#7be0a0;--okb:#123524;--ko:#ff9a9d;--kob:#3d1a1d;--bd:#2c3b5a}}
+:root[data-theme="dark"]{--bg:#101a2c;--fg:#e8edf6;--card:#1a2740;--mut:#9aa7bf;--ac:#5cc0ea;--acf:#06202e;--hl:#f2b134;--ok:#7be0a0;--okb:#123524;--ko:#ff9a9d;--kob:#3d1a1d;--bd:#2c3b5a}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--fg);font:16px/1.5 system-ui,-apple-system,"Segoe UI",sans-serif}
+h1,h2,h3,.big{font-family:Bitter,Georgia,serif}h1{font-size:1.9rem;margin:.2em 0}h2{font-size:1.3rem;margin:1.2em 0 .4em}
+main{max-width:860px;margin:0 auto;padding:16px}
+nav{display:flex;gap:8px;align-items:center;margin-bottom:12px}nav .sp{flex:1}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer;border:2px solid var(--bd);background:var(--card);border-radius:8px;padding:9px 14px}
+button:hover{border-color:var(--ac)}button:focus-visible,select:focus-visible,input:focus-visible{outline:3px solid var(--hl);outline-offset:2px}
+button.on{background:var(--ac);color:var(--acf);border-color:var(--ac)}button.go{background:var(--fg);color:var(--bg);border-color:var(--fg);font-weight:700}
+button:disabled{opacity:.45;cursor:default}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:16px;margin:12px 0}
+.row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}.lab{color:var(--mut);font-size:.9rem;margin-top:12px}
+.stats{display:flex;gap:16px;flex-wrap:wrap;color:var(--mut)}.stats b{color:var(--fg)}
+.big{font-size:clamp(1.8rem,7vw,2.8rem);font-weight:700;text-align:center;margin:8px 0;border-bottom:4px solid var(--hl);display:inline-block;padding:0 6px}
+.c{text-align:center}.fb{padding:12px;border-radius:8px;margin-top:12px}.fb.ok{background:var(--okb);color:var(--ok)}.fb.ko{background:var(--kob);color:var(--ko)}
+input[type=text]{width:100%;padding:12px;border:2px solid var(--bd);border-radius:8px;background:var(--bg);font-size:1.3rem}
+select{padding:8px;border:2px solid var(--bd);border-radius:8px;background:var(--card)}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{border:1px solid var(--bd);padding:6px 8px;text-align:left}th{background:var(--bg)}
+.mut{color:var(--mut)}.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.mode{text-align:left;padding:16px}.mode b{font-family:Bitter,Georgia,serif;font-size:1.15rem;display:block}
+</style></head><body><main id="app"></main>
 <script>
-const T={
- 'Indicativo':['Presente','Pretérito perfecto compuesto','Pretérito imperfecto','Pretérito pluscuamperfecto','Pretérito perfecto simple','Pretérito anterior','Futuro simple','Futuro compuesto','Condicional simple','Condicional compuesto'],
- 'Subjuntivo':['Presente','Pretérito perfecto compuesto','Pretérito imperfecto','Pretérito pluscuamperfecto','Futuro simple','Futuro compuesto'],
- 'Imperativo':['Presente']};
-const qs=[
- ['yo','canto','Presente','Indicativo','cantar · regular · 1.ª conjugación'],['tú','has comido','Pretérito perfecto compuesto','Indicativo','comer · regular · 2.ª conjugación'],['ella','vivía','Pretérito imperfecto','Indicativo','vivir · regular · 3.ª conjugación'],['nosotros','habíamos visto','Pretérito pluscuamperfecto','Indicativo','ver · irregular · 2.ª conjugación'],['ellos','salieron','Pretérito perfecto simple','Indicativo','salir · irregular · 3.ª conjugación'],['yo','hube terminado','Pretérito anterior','Indicativo','terminar · regular · 1.ª conjugación'],['vosotros','tendréis','Futuro simple','Indicativo','tener · irregular · 2.ª conjugación'],['ella','habrá escrito','Futuro compuesto','Indicativo','escribir · irregular · 3.ª conjugación'],['yo','diría','Condicional simple','Indicativo','decir · irregular · 3.ª conjugación'],['ellos','habrían llegado','Condicional compuesto','Indicativo','llegar · regular · 1.ª conjugación'],
- ['yo','sepa','Presente','Subjuntivo','saber · irregular · 2.ª conjugación'],['tú','hayas aprendido','Pretérito perfecto compuesto','Subjuntivo','aprender · regular · 2.ª conjugación'],['nosotros','cantáramos','Pretérito imperfecto','Subjuntivo','cantar · regular · 1.ª conjugación'],['ella','hubiese dormido','Pretérito pluscuamperfecto','Subjuntivo','dormir · irregular · 3.ª conjugación'],['vosotros','hiciereis','Futuro simple','Subjuntivo','hacer · irregular · 2.ª conjugación'],['yo','hubiere partido','Futuro compuesto','Subjuntivo','partir · regular · 3.ª conjugación'],
- ['tú','ven','Presente','Imperativo','venir · irregular · 3.ª conjugación'],['vosotros','comed','Presente','Imperativo','comer · regular · 2.ª conjugación'],['tú','levántate','Presente','Imperativo','levantarse · pronominal · 1.ª conjugación'],['usted','diga','Presente','Imperativo','decir · irregular · 3.ª conjugación'],['ellos','llueve','Presente','Indicativo','llover · defectivo/impersonal · 2.ª conjugación'],['yo','he abierto','Pretérito perfecto compuesto','Indicativo','abrir · irregular · 3.ª conjugación'],['tú','hablases','Pretérito imperfecto','Subjuntivo','hablar · regular · 1.ª conjugación'],['ella','hubiera podido','Pretérito pluscuamperfecto','Subjuntivo','poder · irregular · 2.ª conjugación'],['nosotros','estaríamos','Condicional simple','Indicativo','estar · irregular · 1.ª conjugación'],['yo','habré leído','Futuro compuesto','Indicativo','leer · irregular · 2.ª conjugación'],['tú','saldrías','Condicional simple','Indicativo','salir · irregular · 3.ª conjugación'],['vosotros','hubisteis llegado','Pretérito anterior','Indicativo','llegar · regular · 1.ª conjugación']
-].map((x,i)=>({id:i,person:x[0],verb:x[1],time:x[2],mood:x[3],meaning:x[4]}));
-let deck=[],index=0,score=0,streak=0,answered=false;
-const $=id=>document.getElementById(id); const shuffle=a=>[...a].sort(()=>Math.random()-.5);
-function selected(){return [...document.querySelectorAll('#filters input:checked')].map(x=>x.value)}
-function start(){let cats=selected(); if(!cats.length){alert('Selecciona al menos una categoría.');return} deck=shuffle(qs.filter(q=>cats.includes(q.mood))).slice(0,20);index=0;score=0;streak=0;answered=false;$('score').textContent=0;$('streak').textContent=0;$('quiz').classList.remove('hidden');$('result').classList.add('hidden');show()}
-function show(){answered=false;let q=deck[index];$('progress').style.width=((index)/deck.length*100)+'%';$('counter').textContent=`${index+1} / ${deck.length}`;$('mood').textContent=q.mood;$('person').textContent=q.person;$('verb').textContent=q.verb;$('meaning').textContent='verbo '+q.meaning;$('feedback').className='feedback';$('feedback').textContent='';$('next').classList.add('hidden');let choices=shuffle([q.time,...shuffle(T[q.mood].filter(t=>t!==q.time)).slice(0,3)]);$('options').innerHTML=choices.map(c=>`<button class="option" data-answer="${c}">${c}</button>`).join('');document.querySelectorAll('.option').forEach(b=>b.onclick=()=>answer(b,q))}
-function answer(btn,q){if(answered)return;answered=true;let good=btn.dataset.answer===q.time;document.querySelectorAll('.option').forEach(b=>{b.disabled=true;if(b.dataset.answer===q.time)b.classList.add('correct')});if(!good){btn.classList.add('incorrect');streak=0;$('feedback').innerHTML=`❌ Era <b>${q.time}</b>. ${explain(q.time,q.mood)}`;$('feedback').className='feedback show bad'}else{score+=10+streak*2;streak++;$('feedback').innerHTML=`✅ ¡Correcto! ${explain(q.time,q.mood)}`;$('feedback').className='feedback show ok'}$('score').textContent=score;$('streak').textContent=streak;$('next').textContent=index===deck.length-1?'Ver resultado →':'Siguiente →';$('next').classList.remove('hidden')}
-function explain(t,m){return `${m} · ${t}.`}
-$('next').onclick=()=>{if(index<deck.length-1){index++;show()}else finish()};$('again').onclick=start;$('reset').onclick=start;document.querySelectorAll('#filters input').forEach(x=>x.onchange=()=>{if(!deck.length)start()});start();
-function finish(){$('quiz').classList.add('hidden');$('result').classList.remove('hidden');$('progress').style.width='100%';$('finalScore').textContent=score+' puntos';let pct=Math.round(score/(deck.length*10)*100);$('finalText').textContent=pct>=80?'¡Excelente dominio de los tiempos verbales!':pct>=50?'¡Buen trabajo! Sigue practicando para mejorar.':'Cada intento te ayuda a aprender. ¡Vuelve a jugar!'}
-</script>
-</body>
-</html>
+const $=s=>document.querySelector(s),rnd=a=>a[Math.floor(Math.random()*a.length)],sp6=x=>x.split(' ');
+const MODES={ind:'Indicativo',sub:'Subjuntivo',imv:'Imperativo'};
+const NM={pres:'Presente',pcomp:'Pretérito perfecto compuesto',imp:'Pretérito imperfecto',plus:'Pretérito pluscuamperfecto',pret:'Pretérito perfecto simple',ant:'Pretérito anterior',fut:'Futuro simple',futc:'Futuro compuesto',cond:'Condicional simple',condc:'Condicional compuesto'};
+const TK={ind:['pres','pcomp','imp','plus','pret','ant','fut','futc','cond','condc'],sub:['pres','pcomp','imp','plus','fut','futc'],imv:['pres']};
+const EX={ind:{pres:'yo canto',pcomp:'yo he cantado',imp:'yo cantaba',plus:'yo había cantado',pret:'yo canté',ant:'yo hube cantado',fut:'yo cantaré',futc:'yo habré cantado',cond:'yo cantaría',condc:'yo habría cantado'},sub:{pres:'yo cante',pcomp:'yo haya cantado',imp:'yo cantara / cantase',plus:'yo hubiera / hubiese cantado',fut:'yo cantare',futc:'yo hubiere cantado'},imv:{pres:'¡canta! (tú)'}};
+const PN=['yo','tú','él/ella/usted','nosotros/as','vosotros/as','ellos/ellas/ustedes'],PI=['tú','usted','nosotros','vosotros','ustedes'];
+const PL=['1.ª persona singular (yo)','2.ª persona singular (tú)','3.ª persona singular (él/ella/usted)','1.ª persona plural (nosotros)','2.ª persona plural (vosotros)','3.ª persona plural (ellos/ustedes)'];
+const SUF={ar:{p:'o as a amos áis an',i:'aba abas aba ábamos abais aban',t:'é aste ó amos asteis aron',s:'e es e emos éis en'},er:{p:'o es e emos éis en',i:'ía ías ía íamos íais ían',t:'í iste ió imos isteis ieron',s:'a as a amos áis an'}};
+SUF.ir={...SUF.er,p:'o es e imos ís en'};
+const R=(s,t)=>s.split(' ').map(inf=>({inf,t}));
+const D=[...R('cantar amar estudiar comprar llamar escuchar mirar cocinar ayudar esperar lavar dibujar buscar sacar pagar',1),...R('hablar trabajar caminar bailar viajar nadar llegar',0),...R('comer beber aprender vender temer romper vencer coger escoger',1),...R('correr',0),...R('escribir abrir partir recibir decidir dirigir',1),...R('vivir subir',0),
+{inf:'pensar',t:1,c:['e','ie']},{inf:'contar',t:1,c:['o','ue']},{inf:'empezar',t:1,c:['e','ie']},{inf:'cerrar',t:1,c:['e','ie']},{inf:'encontrar',t:1,c:['o','ue']},{inf:'almorzar',c:['o','ue']},{inf:'jugar',c:['u','ue']},
+{inf:'entender',t:1,c:['e','ie']},{inf:'perder',t:1,c:['e','ie']},{inf:'volver',c:['o','ue'],pp:'vuelto'},{inf:'mover',t:1,c:['o','ue']},{inf:'poder',c:['o','ue'],s:'pud',f:'podr'},{inf:'querer',t:1,c:['e','ie'],s:'quis',f:'querr'},
+{inf:'sentir',t:1,c:['e','ie','i']},{inf:'dormir',c:['o','ue','u']},{inf:'morir',c:['o','ue','u'],pp:'muerto'},{inf:'pedir',t:1,c:['e','i','i']},{inf:'servir',t:1,c:['e','i','i']},{inf:'repetir',t:1,c:['e','i','i']},{inf:'seguir',t:1,c:['e','i','i']},{inf:'elegir',t:1,c:['e','i','i']},
+{inf:'tener',t:1,c:['e','ie'],g:'teng',s:'tuv',f:'tendr',T:'ten'},{inf:'venir',c:['e','ie','i'],g:'veng',s:'vin',f:'vendr',T:'ven'},{inf:'decir',t:1,c:['e','i','i'],g:'dig',s:'dij',f:'dir',pp:'dicho',T:'di'},{inf:'hacer',t:1,g:'hag',s:'hic',f:'har',pp:'hecho',T:'haz'},{inf:'poner',t:1,g:'pong',s:'pus',f:'pondr',pp:'puesto',T:'pon'},{inf:'salir',g:'salg',f:'saldr',T:'sal'},
+{inf:'traer',t:1,g:'traig',s:'traj'},{inf:'caer',g:'caig',v:1},{inf:'leer',t:1,v:1},{inf:'creer',t:1,v:1},{inf:'oír',t:1,P:'oigo oyes oye oímos oís oyen',v:1},{inf:'conocer',t:1,g:'conozc'},{inf:'ofrecer',t:1,g:'ofrezc'},{inf:'conducir',t:1,g:'conduzc',s:'conduj'},{inf:'andar',s:'anduv'},
+{inf:'ver',t:1,P:'veo ves ve vemos veis ven',I:'veía veías veía veíamos veíais veían',R:'vi viste vio vimos visteis vieron',pp:'visto'},
+{inf:'saber',t:1,P:'sé sabes sabe sabemos sabéis saben',S:'sepa sepas sepa sepamos sepáis sepan',s:'sup',f:'sabr'},
+{inf:'construir',t:1,P:'construyo construyes construye construimos construís construyen',R:'construí construiste construyó construimos construisteis construyeron'},
+{inf:'ser',P:'soy eres es somos sois son',I:'era eras era éramos erais eran',R:'fui fuiste fue fuimos fuisteis fueron',S:'sea seas sea seamos seáis sean',T:'sé',pp:'sido'},
+{inf:'ir',P:'voy vas va vamos vais van',I:'iba ibas iba íbamos ibais iban',R:'fui fuiste fue fuimos fuisteis fueron',S:'vaya vayas vaya vayamos vayáis vayan',T:'ve',pp:'ido'},
+{inf:'dar',t:1,P:'doy das da damos dais dan',R:'di diste dio dimos disteis dieron',S:'dé des dé demos deis den'},
+{inf:'estar',P:'estoy estás está estamos estáis están',s:'estuv',S:'esté estés esté estemos estéis estén',T:'está'},
+{inf:'haber',P:'he has ha hemos habéis han',S:'haya hayas haya hayamos hayáis hayan',s:'hub',f:'habr'}];
+const V=n=>D.find(v=>v.inf==n),HV=V('haber'),SV=V('ser');
+const isReg=v=>!['c','g','s','P','R','f','pp','S','T','I','v'].some(k=>k in v);
+function sp(inf,st,e){const f=e[0];
+ if(/car$/.test(inf)&&'eé'.includes(f))return st.replace(/c$/,'qu');
+ if(/gar$/.test(inf)&&'eé'.includes(f))return st+'u';
+ if(/zar$/.test(inf)&&'eé'.includes(f))return st.replace(/z$/,'c');
+ if(/g[ei]r$/.test(inf)&&'oa'.includes(f))return st.replace(/g$/,'j');
+ if(/guir$/.test(inf)&&'oa'.includes(f))return st.replace(/u$/,'');
+ if(/[^aeiou]cer$/.test(inf)&&'oa'.includes(f))return st.replace(/c$/,'z');
+ return st}
+const cache={};
+function tab(v){if(cache[v.inf])return cache[v.inf];
+ const inf=v.inf,k=inf.slice(-2).replace('í','i'),st=inf.slice(0,-2),U=SUF[k],c=v.c;
+ const rx=c&&new RegExp(c[0]+'(?=[^'+c[0]+']*$)'),lo=c?st.replace(rx,c[1]):st,lo2=c&&c[2]?st.replace(rx,c[2]):st;
+ const ch=i=>c&&[0,1,2,5].includes(i)?lo:st;
+ const pres=v.P?sp6(v.P):sp6(U.p).map((e,i)=>i==0&&v.g?v.g+e:sp(inf,ch(i),e)+e);
+ const imp=v.I?sp6(v.I):sp6(U.i).map(e=>st+e);
+ const pret=v.R?sp6(v.R):v.s?sp6('e iste o imos isteis ieron').map((e,i)=>{const s=v.s;if(i==2&&/c$/.test(s))return s.slice(0,-1)+'zo';if(i==5&&/j$/.test(s))e='eron';return s+e}):
+  v.v?sp6('í íste yó ímos ísteis yeron').map(e=>st+e):sp6(U.t).map((e,i)=>sp(inf,c&&c[2]&&(i==2||i==5)?lo2:st,e)+e);
+ const fb=v.f||inf.replace('í','i');
+ const se=sp6(U.s);
+ const spres=v.S?sp6(v.S):se.map((e,i)=>{const s=v.g?v.g:v.P?v.P.split(' ')[0].slice(0,-1):(c&&[0,1,2,5].includes(i)?lo:(c&&c[2]?lo2:st));return sp(inf,s,e)+e});
+ const stem=pret[5].slice(0,-3),ac=stem.replace(/[aeiou](?=[^aeiou]*$)/,m=>'áéíóú'['aeiou'.indexOf(m)]);
+ const sim=sp6('ra ras ra ramos rais ran').map((e,i)=>{const s=i==3?ac:stem;return s+e+'/'+s+sp6('se ses se semos seis sen')[i]});
+ const sf=sp6('re res re remos reis ren').map((e,i)=>(i==3?ac:stem)+e);
+ const r={ind:{pres,imp,pret,fut:sp6('é ás á emos éis án').map(e=>fb+e),cond:sp6('ía ías ía íamos íais ían').map(e=>fb+e)},sub:{pres:spres,imp:sim,fut:sf},imv:{pres:[v.T||pres[2],spres[2],spres[3],inf.slice(0,-1)+'d',spres[5]]}};
+ r.pp=v.pp||st+(k=='ar'?'ado':(/[aeo]$/.test(st)?'ído':'ido'));
+ return cache[inf]=r}
+const AUX={'ind.pcomp':['ind','pres'],'ind.plus':['ind','imp'],'ind.ant':['ind','pret'],'ind.futc':['ind','fut'],'ind.condc':['ind','cond'],'sub.pcomp':['sub','pres'],'sub.plus':['sub','imp'],'sub.futc':['sub','fut']};
+function conj(v,m,t,p,vo){const a=AUX[m+'.'+t],pp=tab(v).pp,pl=m=='imv'?p>1:p>2,part=pl?pp.replace(/o$/,'os'):pp;
+ if(!vo)return a?tab(HV)[a[0]][a[1]][p]+' '+pp:tab(v)[m][t][p];
+ return a?tab(HV)[a[0]][a[1]][p]+' sido '+part:tab(SV)[m][t][p]+' '+part}
+const alts=s=>{const w=s.split(' ');return w[0].split('/').map(a=>[a,...w.slice(1)].join(' '))};
+const flat=s=>s.toLowerCase().normalize('NFD').replace(/\p{M}/gu,'').replace(/[¡!¿?.,]/g,'').trim().replace(/\s+/g,' ');
+const pron=/^(yo|tu|el|ella|usted|nosotros|nosotras|vosotros|vosotras|ellos|ellas|ustedes)\s+/;
+const desc=q=>`${MODES[q.m]} · ${NM[q.t]} · voz ${q.vo?'pasiva':'activa'} · ${q.m=='imv'?PI[q.p]:PL[q.p]}`;
+
+/* ---------- estado ---------- */
+let G={type:'id',rounds:10,modes:'all',voz:'act',conj:'all',irr:'all'},best={};
+try{best=JSON.parse(localStorage.getItem('verbario')||'{}')}catch(e){}
+const app=$('#app');
+const nav=t=>`<nav><h1 style="cursor:pointer" onclick="menu()">Verbario</h1><span class="sp"></span><button class="${t=='play'?'on':''}" onclick="menu()">Jugar</button><button class="${t=='study'?'on':''}" onclick="study()">Estudiar</button></nav>`;
+const btns=(k,opts)=>`<div class="row">${opts.map(([v,l])=>`<button class="${G[k]==v?'on':''}" onclick="G.${k}=${JSON.stringify(v).replace(/"/g,"'")};menu()">${l}</button>`).join('')}</div>`;
+
+function menu(){app.innerHTML=nav('play')+`<p class="mut">Practica los modos y tiempos verbales del español con cientos de conjugaciones distintas: regulares, irregulares, voz activa y pasiva.</p>
+<div class="opts"><button class="mode ${G.type=='id'?'on':''}" onclick="G.type='id';menu()"><b>Identificar</b>Ves una forma verbal y marcas su modo y su tiempo.</button><button class="mode ${G.type=='wr'?'on':''}" onclick="G.type='wr';menu()"><b>Escribir</b>Te damos verbo, modo, tiempo y persona. Tú escribes la forma.</button></div>
+<div class="card"><div class="lab">Rondas</div>${btns('rounds',[5,10,20,30,50].map(n=>[n,n]))}
+<div class="lab">Modos que aparecen</div>${btns('modes',[['all','Todos'],['ind','Indicativo'],['sub','Subjuntivo'],['imv','Imperativo']])}
+<div class="lab">Voz</div>${btns('voz',[['act','Activa'],['pas','Pasiva'],['both','Ambas']])}
+<div class="lab">Conjugación</div>${btns('conj',[['all','Todas'],['ar','1.ª (-ar)'],['er','2.ª (-er)'],['ir','3.ª (-ir)']])}
+<div class="lab">Tipo de verbos</div>${btns('irr',[['all','Todos'],['reg','Regulares'],['irr','Irregulares']])}</div>
+<button class="go" style="font-size:1.1rem;padding:12px 28px" onclick="start()">Empezar partida</button><p class="mut">${best.id!=null||best.wr!=null?`Mejor puntuación — Identificar: ${best.id||0} · Escribir: ${best.wr||0}`:''}</p>`}
+
+function pool(){return D.filter(v=>(G.conj=='all'||v.inf.replace('í','i').endsWith(G.conj))&&(G.irr=='all'||(G.irr=='reg')==isReg(v))&&(G.voz!='pas'||v.t))}
+function start(){G.i=0;G.score=0;G.streak=0;G.ok=0;G.bad=[];next()}
+function next(){if(G.i>=G.rounds)return end();G.i++;const ms=G.modes=='all'?['ind','sub','imv','imv']:[G.modes];
+ const all=[];ms.forEach(m=>TK[m].forEach(t=>all.push([m,t])));
+ const [m,t]=rnd(all),v=rnd(pool()),vo=v.t&&(G.voz=='pas'||(G.voz=='both'&&Math.random()<.5))?1:0,p=Math.floor(Math.random()*(m=='imv'?5:6));
+ const form=conj(v,m,t,p,vo);G.q={v,m,t,vo,p,form,shown:rnd(alts(form)),done:0,sel:{}};draw()}
+
+function head(){return `<div class="stats"><span>Ronda <b>${G.i}/${G.rounds}</b></span><span>Puntos <b>${G.score}</b></span><span>Racha <b>${G.streak}</b></span><span style="margin-left:auto"><button onclick="menu()">Salir</button></span></div>`}
+function draw(){const q=G.q;let h=nav('play')+head()+'<div class="card c">';
+ if(G.type=='id'){h+=`<div class="mut">¿Qué modo y tiempo es?</div><div class="big">${q.shown}</div><div class="mut">infinitivo: ${q.v.inf}</div></div><div class="card"><div class="lab">Modo</div><div class="row">${Object.keys(MODES).map(m=>`<button class="${q.sel.m==m?'on':''}" ${q.done?'disabled':''} onclick="pick('m','${m}')">${MODES[m]}</button>`).join('')}</div>`;
+  if(q.sel.m)h+=`<div class="lab">Tiempo</div><div class="row">${TK[q.sel.m].map(t=>`<button class="${q.sel.t==t?'on':''}" ${q.done?'disabled':''} onclick="pick('t','${t}')">${NM[t]}</button>`).join('')}</div>`;
+  if(G.voz=='both')h+=`<div class="lab">Voz</div><div class="row">${[[0,'Activa'],[1,'Pasiva']].map(([n,l])=>`<button class="${q.sel.vo===n?'on':''}" ${q.done?'disabled':''} onclick="pick('vo',${n})">${l}</button>`).join('')}</div>`;
+  h+=`<div class="row"><button class="go" id="chk" ${q.done||!ready()?'disabled':''} onclick="check()">Comprobar</button></div>`}
+ else h+=`<div class="mut">Escribe la forma verbal</div><div class="big">${q.v.inf}</div><p><b>${MODES[q.m]}</b> · ${NM[q.t]}<br>${q.m=='imv'?'Persona: '+PI[q.p]:PL[q.p]}<br>Voz ${q.vo?'pasiva':'activa'}${q.vo?' (ser + participio)':''}</p></div><div class="card"><input type="text" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" ${q.done?'disabled':''} placeholder="Escribe aquí (¡con tilde!)"><div class="row"><button class="go" ${q.done?'disabled':''} onclick="check()">Comprobar</button></div>`;
+ h+=`<div id="fb"></div></div>`;app.innerHTML=h;
+ const a=$('#ans');if(a){a.focus();a.onkeydown=e=>{if(e.key=='Enter'&&!G.q.done)check()}}}
+const ready=()=>{const s=G.q.sel;return s.m&&s.t&&(G.voz!='both'||s.vo!==undefined)};
+function pick(k,val){const s=G.q.sel;s[k]=val;if(k=='m'){s.t=TK[val].length==1?TK[val][0]:undefined}draw()}
+function combos(q){const v=q.v,out=[];for(const m in TK)for(const t of TK[m])for(const vo of (v.t&&G.voz!='act'?[0,1]:[0]))for(let p=0;p<(m=='imv'?5:6);p++)if(alts(conj(v,m,t,p,vo)).includes(q.shown))out.push({m,t,vo,p});return out}
+function check(){const q=G.q;if(q.done)return;let good,accent=false,exp;
+ if(G.type=='id'){if(!ready())return;const cs=combos(q);good=cs.some(c=>c.m==q.sel.m&&c.t==q.sel.t&&(G.voz!='both'||c.vo===q.sel.vo));
+  exp=cs.map(c=>desc({...c}));exp=[...new Set(exp)].slice(0,3).join('<br>')}
+ else{const raw=$('#ans').value;if(!raw.trim())return;const u=flat(raw).replace(pron,''),al=alts(q.form);good=al.some(a=>flat(a)==u);
+  if(good)accent=!al.some(a=>a.toLowerCase()==raw.toLowerCase().replace(/[¡!]/g,'').trim().replace(pron,'').replace(/^(tú|él|ella)\s+/,''));exp=al.join(' / ')}
+ q.done=1;if(good){G.ok++;G.streak++;G.score+=10+Math.min(G.streak-1,5)*2-(accent?5:0)}else{G.streak=0;G.bad.push({q,exp})}
+ draw();$('#fb').innerHTML=`<div class="fb ${good?'ok':'ko'}"><b>${good?(accent?'¡Casi! Revisa las tildes.':'¡Correcto!'):'No era esa.'}</b><br>${G.type=='id'?'Es: '+exp:'Respuesta: <b>'+exp+'</b>'}${G.type=='wr'?'<br><span class="mut">'+q.v.inf+' → '+desc(q)+'</span>':''}</div><div class="row"><button class="go" id="nx" onclick="next()">${G.i>=G.rounds?'Ver resultado':'Siguiente'}</button></div>`;$('#nx').focus()}
+function end(){const k=G.type,pct=Math.round(G.ok/G.rounds*100);let nr=0;if((best[k]||0)<G.score){best[k]=G.score;nr=1;try{localStorage.setItem('verbario',JSON.stringify(best))}catch(e){}}
+ app.innerHTML=nav('play')+`<div class="card c"><h2>Partida terminada</h2><div class="big">${G.score} puntos</div><p>${G.ok} de ${G.rounds} aciertos (${pct}%)${nr?' · ¡nuevo récord!':''}</p><div class="row" style="justify-content:center"><button class="go" onclick="start()">Jugar otra vez</button><button onclick="menu()">Cambiar ajustes</button></div></div>`+(G.bad.length?`<h2>Para repasar</h2><div class="card tw"><table><tr><th>Forma / verbo</th><th>Solución</th></tr>${G.bad.map(b=>`<tr><td><b>${G.type=='id'?b.q.shown:b.q.v.inf}</b></td><td>${G.type=='id'?b.exp:desc(b.q)+'<br><b>'+b.q.form+'</b>'}</td></tr>`).join('')}</table></div>`:'<p class="c">¡Sin errores!</p>')}
+
+/* ---------- estudio ---------- */
+let S={v:'cantar',vo:0};
+function study(){const v=V(S.v),vo=v.t?S.vo:0;let h=nav('study')+`<div class="card"><h2 style="margin-top:0">Los tiempos verbales</h2><p class="mut">Ejemplos con «cantar». La voz pasiva se forma con el verbo <i>ser</i> + participio (yo soy amado, yo he sido amado).</p>`;
+ for(const m in TK)h+=`<h3>${MODES[m]}</h3><div class="tw"><table>${TK[m].map(t=>`<tr><th>${NM[t]}</th><td>${EX[m][t]}</td></tr>`).join('')}</table></div>`;
+ h+=`</div><div class="card"><h2 style="margin-top:0">Conjuga cualquier verbo</h2><div class="row"><select id="sv" onchange="S.v=this.value;study()">${[...D].sort((a,b)=>a.inf.localeCompare(b.inf,'es')).map(x=>`<option ${x.inf==S.v?'selected':''}>${x.inf}</option>`).join('')}</select>${v.t?`<button class="${!vo?'on':''}" onclick="S.vo=0;study()">Voz activa</button><button class="${vo?'on':''}" onclick="S.vo=1;study()">Voz pasiva</button>`:'<span class="mut">Verbo intransitivo: sin voz pasiva</span>'}</div><p class="mut">Participio: <b>${tab(v).pp}</b> · ${isReg(v)?'verbo regular':'verbo con irregularidades'}</p>`;
+ for(const m of ['ind','sub'])h+=`<h3>${MODES[m]}</h3><div class="tw"><table><tr><th></th>${PN.map(p=>`<th>${p}</th>`).join('')}</tr>${TK[m].map(t=>`<tr><th>${NM[t]}</th>${PN.map((_,p)=>`<td>${conj(v,m,t,p,vo).replace(/\//g,' / ')}</td>`).join('')}</tr>`).join('')}</table></div>`;
+ h+=`<h3>Imperativo</h3><div class="tw"><table><tr>${PI.map(p=>`<th>${p}</th>`).join('')}</tr><tr>${PI.map((_,p)=>`<td>¡${conj(v,'imv','pres',p,vo)}!</td>`).join('')}</tr></table></div></div>`;
+ app.innerHTML=h}
+menu();
+</script></body></html>
