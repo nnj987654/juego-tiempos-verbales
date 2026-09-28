@@ -24,6 +24,7 @@ select{padding:8px;border:2px solid var(--bd);border-radius:8px;background:var(-
 .tw{overflow-x:auto}table{border-collapse:collapse;width:100%;font-size:.92rem}th,td{border:1px solid var(--bd);padding:6px 8px;text-align:left}th{background:var(--bg)}
 .mut{color:var(--mut)}.opts{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
 .mode{text-align:left;padding:16px}.mode b{font-family:Bitter,Georgia,serif;font-size:1.15rem;display:block}
+.fb table{background:var(--card);color:var(--fg);margin-top:8px}.fb td.r{color:var(--ok);font-weight:700}.fb td.w{color:var(--ko);font-weight:700}
 </style></head><body><main id="app"></main>
 <script>
 const $=s=>document.querySelector(s),rnd=a=>a[Math.floor(Math.random()*a.length)],sp6=x=>x.split(' ');
@@ -33,6 +34,10 @@ const TK={ind:['pres','pcomp','imp','plus','pret','ant','fut','futc','cond','con
 const EX={ind:{pres:'yo canto',pcomp:'yo he cantado',imp:'yo cantaba',plus:'yo había cantado',pret:'yo canté',ant:'yo hube cantado',fut:'yo cantaré',futc:'yo habré cantado',cond:'yo cantaría',condc:'yo habría cantado'},sub:{pres:'yo cante',pcomp:'yo haya cantado',imp:'yo cantara / cantase',plus:'yo hubiera / hubiese cantado',fut:'yo cantare',futc:'yo hubiere cantado'},imv:{pres:'¡canta! (tú)'}};
 const PN=['yo','tú','él/ella/usted','nosotros/as','vosotros/as','ellos/ellas/ustedes'],PI=['tú','usted','nosotros','vosotros','ustedes'];
 const PL=['1.ª persona singular (yo)','2.ª persona singular (tú)','3.ª persona singular (él/ella/usted)','1.ª persona plural (nosotros)','2.ª persona plural (vosotros)','3.ª persona plural (ellos/ustedes)'];
+const NU=['Singular','Plural'],VZ=['Activa','Pasiva'];
+/* persona (1-3) y número (0 sing, 1 plural) de cada índice de persona */
+const IPN=[[2,0],[3,0],[1,1],[2,1],[3,1]];
+const PNM=(m,p)=>m=='imv'?IPN[p]:[p%3+1,p>2?1:0];
 const SUF={ar:{p:'o as a amos áis an',i:'aba abas aba ábamos abais aban',t:'é aste ó amos asteis aron',s:'e es e emos éis en'},er:{p:'o es e emos éis en',i:'ía ías ía íamos íais ían',t:'í iste ió imos isteis ieron',s:'a as a amos áis an'}};
 SUF.ir={...SUF.er,p:'o es e imos ís en'};
 const R=(s,t)=>s.split(' ').map(inf=>({inf,t}));
@@ -88,6 +93,8 @@ const pron=/^(yo|tu|el|ella|usted|nosotros|nosotras|vosotros|vosotras|ellos|ella
 const desc=q=>`${MODES[q.m]} · ${NM[q.t]} · voz ${q.vo?'pasiva':'activa'} · ${q.m=='imv'?PI[q.p]:PL[q.p]}`;
 
 /* ---------- estado ---------- */
+const TYPES=[['id','Identificar','Ves una forma verbal y marcas su modo y su tiempo.'],['wr','Escribir','Te damos verbo, modo, tiempo y persona. Tú escribes la forma.'],['an','Analizar (completo)','Ves una forma verbal y dices todo: infinitivo, persona, número, tiempo, modo y voz.'],['cj','Conjugar (completo)','Te damos infinitivo, persona, número, tiempo, modo y voz. Tú escribes la forma.']];
+const isA=()=>G.type=='id'||G.type=='an',isW=()=>G.type=='wr'||G.type=='cj';
 let G={type:'id',rounds:10,modes:'all',voz:'act',conj:'all',irr:'all'},best={};
 try{best=JSON.parse(localStorage.getItem('verbario')||'{}')}catch(e){}
 const app=$('#app');
@@ -95,13 +102,13 @@ const nav=t=>`<nav><h1 style="cursor:pointer" onclick="menu()">Verbario</h1><spa
 const btns=(k,opts)=>`<div class="row">${opts.map(([v,l])=>`<button class="${G[k]==v?'on':''}" onclick="G.${k}=${JSON.stringify(v).replace(/"/g,"'")};menu()">${l}</button>`).join('')}</div>`;
 
 function menu(){app.innerHTML=nav('play')+`<p class="mut">Practica los modos y tiempos verbales del español con cientos de conjugaciones distintas: regulares, irregulares, voz activa y pasiva.</p>
-<div class="opts"><button class="mode ${G.type=='id'?'on':''}" onclick="G.type='id';menu()"><b>Identificar</b>Ves una forma verbal y marcas su modo y su tiempo.</button><button class="mode ${G.type=='wr'?'on':''}" onclick="G.type='wr';menu()"><b>Escribir</b>Te damos verbo, modo, tiempo y persona. Tú escribes la forma.</button></div>
+<div class="opts">${TYPES.map(([k,n,d])=>`<button class="mode ${G.type==k?'on':''}" onclick="G.type='${k}';menu()"><b>${n}</b>${d}</button>`).join('')}</div>
 <div class="card"><div class="lab">Rondas</div>${btns('rounds',[5,10,20,30,50].map(n=>[n,n]))}
 <div class="lab">Modos que aparecen</div>${btns('modes',[['all','Todos'],['ind','Indicativo'],['sub','Subjuntivo'],['imv','Imperativo']])}
 <div class="lab">Voz</div>${btns('voz',[['act','Activa'],['pas','Pasiva'],['both','Ambas']])}
 <div class="lab">Conjugación</div>${btns('conj',[['all','Todas'],['ar','1.ª (-ar)'],['er','2.ª (-er)'],['ir','3.ª (-ir)']])}
 <div class="lab">Tipo de verbos</div>${btns('irr',[['all','Todos'],['reg','Regulares'],['irr','Irregulares']])}</div>
-<button class="go" style="font-size:1.1rem;padding:12px 28px" onclick="start()">Empezar partida</button><p class="mut">${best.id!=null||best.wr!=null?`Mejor puntuación — Identificar: ${best.id||0} · Escribir: ${best.wr||0}`:''}</p>`}
+<button class="go" style="font-size:1.1rem;padding:12px 28px" onclick="start()">Empezar partida</button><p class="mut">${Object.keys(best).length?'Mejor puntuación — '+[['id','Identificar'],['wr','Escribir'],['an','Analizar'],['cj','Conjugar']].map(([k,l])=>l+': '+(best[k]||0)).join(' · '):''}</p>`}
 
 function pool(){return D.filter(v=>(G.conj=='all'||v.inf.replace('í','i').endsWith(G.conj))&&(G.irr=='all'||(G.irr=='reg')==isReg(v))&&(G.voz!='pas'||v.t))}
 function start(){G.i=0;G.score=0;G.streak=0;G.ok=0;G.bad=[];next()}
@@ -116,21 +123,41 @@ function draw(){const q=G.q;let h=nav('play')+head()+'<div class="card c">';
   if(q.sel.m)h+=`<div class="lab">Tiempo</div><div class="row">${TK[q.sel.m].map(t=>`<button class="${q.sel.t==t?'on':''}" ${q.done?'disabled':''} onclick="pick('t','${t}')">${NM[t]}</button>`).join('')}</div>`;
   if(G.voz=='both')h+=`<div class="lab">Voz</div><div class="row">${[[0,'Activa'],[1,'Pasiva']].map(([n,l])=>`<button class="${q.sel.vo===n?'on':''}" ${q.done?'disabled':''} onclick="pick('vo',${n})">${l}</button>`).join('')}</div>`;
   h+=`<div class="row"><button class="go" id="chk" ${q.done||!ready()?'disabled':''} onclick="check()">Comprobar</button></div>`}
+ else if(G.type=='an'){const d=q.done?'disabled':'',S=q.sel,B=(k,v,l)=>`<button class="${S[k]===v?'on':''}" ${d} onclick="pick('${k}',${v})">${l}</button>`;
+  h+=`<div class="mut">Analiza esta forma verbal</div><div class="big">${q.shown}</div></div><div class="card"><div class="lab">Infinitivo</div><input type="text" id="inf" autocomplete="off" autocapitalize="off" spellcheck="false" ${d} value="${(q.inf||'').replace(/"/g,'&quot;')}" oninput="G.q.inf=this.value" placeholder="Ej.: cantar">
+<div class="lab">Persona</div><div class="row">${[1,2,3].map(n=>B('pe',n,n+'.ª')).join('')}</div>
+<div class="lab">Número</div><div class="row">${B('nu',0,'Singular')}${B('nu',1,'Plural')}</div>
+<div class="lab">Modo</div><div class="row">${Object.keys(MODES).map(m=>`<button class="${S.m==m?'on':''}" ${d} onclick="pick('m','${m}')">${MODES[m]}</button>`).join('')}</div>`;
+  if(S.m)h+=`<div class="lab">Tiempo</div><div class="row">${TK[S.m].map(t=>`<button class="${S.t==t?'on':''}" ${d} onclick="pick('t','${t}')">${NM[t]}</button>`).join('')}</div>`;
+  h+=`<div class="lab">Voz</div><div class="row">${B('vo',0,'Activa')}${B('vo',1,'Pasiva')}</div><div class="row"><button class="go" ${d} onclick="check()">Comprobar</button></div>`}
+ else if(G.type=='cj'){const [pe,nu]=PNM(q.m,q.p);
+  h+=`<div class="mut">Conjuga este verbo</div><div class="big">${q.v.inf}</div><div class="tw"><table style="max-width:460px;margin:8px auto;text-align:left"><tr><th>Persona</th><td>${pe}.ª${q.m=='imv'?' ('+PI[q.p]+')':''}</td></tr><tr><th>Número</th><td>${NU[nu]}</td></tr><tr><th>Tiempo</th><td>${NM[q.t]}</td></tr><tr><th>Modo</th><td>${MODES[q.m]}</td></tr><tr><th>Voz</th><td>${VZ[q.vo]}${q.vo?' (ser + participio)':''}</td></tr></table></div></div><div class="card"><input type="text" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" ${q.done?'disabled':''} placeholder="Escribe aquí (¡con tilde!)"><div class="row"><button class="go" ${q.done?'disabled':''} onclick="check()">Comprobar</button></div>`}
  else h+=`<div class="mut">Escribe la forma verbal</div><div class="big">${q.v.inf}</div><p><b>${MODES[q.m]}</b> · ${NM[q.t]}<br>${q.m=='imv'?'Persona: '+PI[q.p]:PL[q.p]}<br>Voz ${q.vo?'pasiva':'activa'}${q.vo?' (ser + participio)':''}</p></div><div class="card"><input type="text" id="ans" autocomplete="off" autocapitalize="off" spellcheck="false" ${q.done?'disabled':''} placeholder="Escribe aquí (¡con tilde!)"><div class="row"><button class="go" ${q.done?'disabled':''} onclick="check()">Comprobar</button></div>`;
  h+=`<div id="fb"></div></div>`;app.innerHTML=h;
- const a=$('#ans');if(a){a.focus();a.onkeydown=e=>{if(e.key=='Enter'&&!G.q.done)check()}}}
+ const a=$('#ans')||$('#inf');if(a){if(!G.q.touched||a.id=='ans')a.focus();a.onkeydown=e=>{if(e.key=='Enter'&&!G.q.done)check()}}}
 const ready=()=>{const s=G.q.sel;return s.m&&s.t&&(G.voz!='both'||s.vo!==undefined)};
-function pick(k,val){const s=G.q.sel;s[k]=val;if(k=='m'){s.t=TK[val].length==1?TK[val][0]:undefined}draw()}
+function pick(k,val){const s=G.q.sel;s[k]=val;G.q.touched=1;if(k=='m'){s.t=TK[val].length==1?TK[val][0]:undefined}draw()}
 function combos(q){const v=q.v,out=[];for(const m in TK)for(const t of TK[m])for(const vo of (v.t&&G.voz!='act'?[0,1]:[0]))for(let p=0;p<(m=='imv'?5:6);p++)if(alts(conj(v,m,t,p,vo)).includes(q.shown))out.push({m,t,vo,p});return out}
-function check(){const q=G.q;if(q.done)return;let good,accent=false,exp;
- if(G.type=='id'){if(!ready())return;const cs=combos(q);good=cs.some(c=>c.m==q.sel.m&&c.t==q.sel.t&&(G.voz!='both'||c.vo===q.sel.vo));
-  exp=cs.map(c=>desc({...c}));exp=[...new Set(exp)].slice(0,3).join('<br>')}
+/* todos los análisis posibles de una forma (cualquier verbo, modo, tiempo, voz y persona) */
+function allCombos(shown){const out=[];for(const v of D)for(const m in TK)for(const t of TK[m])for(const vo of (v.t?[0,1]:[0]))for(let p=0;p<(m=='imv'?5:6);p++)if(alts(conj(v,m,t,p,vo)).includes(shown))out.push({v,m,t,vo,p});return out}
+function check(){const q=G.q;if(q.done)return;let good,accent=false,exp,body;
+ if(G.type=='an'){const s=q.sel,inf=(q.inf||'').trim();
+  if(!inf||!s.pe||s.nu===undefined||!s.m||!s.t||s.vo===undefined){$('#fb').innerHTML='<div class="fb ko">Completa todos los campos antes de comprobar (infinitivo, persona, número, modo, tiempo y voz).</div>';return}
+  const cs=allCombos(q.shown),sc=c=>{const [pe,nu]=PNM(c.m,c.p);return[flat(inf)==flat(c.v.inf),pe==s.pe,nu==s.nu,c.m==s.m,c.t==s.t,c.vo==s.vo]};
+  let bc=cs[0],bs=-1;cs.forEach(c=>{const n=sc(c).filter(Boolean).length;if(n>bs){bs=n;bc=c}});
+  const r=sc(bc),[bpe,bnu]=PNM(bc.m,bc.p);good=bs==6;
+  const rows=[['Infinitivo',inf,bc.v.inf],['Persona',s.pe+'.ª',bpe+'.ª'],['Número',NU[s.nu],NU[bnu]],['Modo',MODES[s.m],MODES[bc.m]],['Tiempo',NM[s.t],NM[bc.t]],['Voz',VZ[s.vo],VZ[bc.vo]]];
+  exp=[...new Set(cs.map(c=>c.v.inf+' — '+desc(c)))].slice(0,4).join('<br>');
+  body=`<div class="tw"><table><tr><th>Campo</th><th>Tu respuesta</th><th>Correcto</th></tr>${rows.map(([l,a,b],i)=>`<tr><td>${l}</td><td class="${r[i]?'r':'w'}">${r[i]?'✓':'✗'} ${a}</td><td>${b}</td></tr>`).join('')}</table></div>`+(good?'':`<br>Análisis posibles:<br>${exp}`)}
+ else if(G.type=='id'){if(!ready())return;const cs=combos(q);good=cs.some(c=>c.m==q.sel.m&&c.t==q.sel.t&&(G.voz!='both'||c.vo===q.sel.vo));
+  exp=cs.map(c=>desc({...c}));exp=[...new Set(exp)].slice(0,3).join('<br>');body='Es: '+exp}
  else{const raw=$('#ans').value;if(!raw.trim())return;const u=flat(raw).replace(pron,''),al=alts(q.form);good=al.some(a=>flat(a)==u);
-  if(good)accent=!al.some(a=>a.toLowerCase()==raw.toLowerCase().replace(/[¡!]/g,'').trim().replace(pron,'').replace(/^(tú|él|ella)\s+/,''));exp=al.join(' / ')}
+  if(good)accent=!al.some(a=>a.toLowerCase()==raw.toLowerCase().replace(/[¡!]/g,'').trim().replace(pron,'').replace(/^(tú|él|ella)\s+/,''));exp=al.join(' / ');
+  body='Respuesta: <b>'+exp+'</b><br><span class="mut">'+q.v.inf+' → '+desc(q)+'</span>'}
  q.done=1;if(good){G.ok++;G.streak++;G.score+=10+Math.min(G.streak-1,5)*2-(accent?5:0)}else{G.streak=0;G.bad.push({q,exp})}
- draw();$('#fb').innerHTML=`<div class="fb ${good?'ok':'ko'}"><b>${good?(accent?'¡Casi! Revisa las tildes.':'¡Correcto!'):'No era esa.'}</b><br>${G.type=='id'?'Es: '+exp:'Respuesta: <b>'+exp+'</b>'}${G.type=='wr'?'<br><span class="mut">'+q.v.inf+' → '+desc(q)+'</span>':''}</div><div class="row"><button class="go" id="nx" onclick="next()">${G.i>=G.rounds?'Ver resultado':'Siguiente'}</button></div>`;$('#nx').focus()}
+ draw();$('#fb').innerHTML=`<div class="fb ${good?'ok':'ko'}"><b>${good?(accent?'¡Casi! Revisa las tildes.':'¡Correcto!'):'No era esa.'}</b><br>${body}</div><div class="row"><button class="go" id="nx" onclick="next()">${G.i>=G.rounds?'Ver resultado':'Siguiente'}</button></div>`;$('#nx').focus()}
 function end(){const k=G.type,pct=Math.round(G.ok/G.rounds*100);let nr=0;if((best[k]||0)<G.score){best[k]=G.score;nr=1;try{localStorage.setItem('verbario',JSON.stringify(best))}catch(e){}}
- app.innerHTML=nav('play')+`<div class="card c"><h2>Partida terminada</h2><div class="big">${G.score} puntos</div><p>${G.ok} de ${G.rounds} aciertos (${pct}%)${nr?' · ¡nuevo récord!':''}</p><div class="row" style="justify-content:center"><button class="go" onclick="start()">Jugar otra vez</button><button onclick="menu()">Cambiar ajustes</button></div></div>`+(G.bad.length?`<h2>Para repasar</h2><div class="card tw"><table><tr><th>Forma / verbo</th><th>Solución</th></tr>${G.bad.map(b=>`<tr><td><b>${G.type=='id'?b.q.shown:b.q.v.inf}</b></td><td>${G.type=='id'?b.exp:desc(b.q)+'<br><b>'+b.q.form+'</b>'}</td></tr>`).join('')}</table></div>`:'<p class="c">¡Sin errores!</p>')}
+ app.innerHTML=nav('play')+`<div class="card c"><h2>Partida terminada</h2><div class="big">${G.score} puntos</div><p>${G.ok} de ${G.rounds} aciertos (${pct}%)${nr?' · ¡nuevo récord!':''}</p><div class="row" style="justify-content:center"><button class="go" onclick="start()">Jugar otra vez</button><button onclick="menu()">Cambiar ajustes</button></div></div>`+(G.bad.length?`<h2>Para repasar</h2><div class="card tw"><table><tr><th>Forma / verbo</th><th>Solución</th></tr>${G.bad.map(b=>`<tr><td><b>${isA()?b.q.shown:b.q.v.inf}</b></td><td>${isA()?b.exp:desc(b.q)+'<br><b>'+b.q.form+'</b>'}</td></tr>`).join('')}</table></div>`:'<p class="c">¡Sin errores!</p>')}
 
 /* ---------- estudio ---------- */
 let S={v:'cantar',vo:0};
